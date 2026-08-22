@@ -166,10 +166,10 @@ export const WorkItemDetailQuickActions = observer(function WorkItemDetailQuickA
         };
       }
       // Hide copy link in peek mode
-      if (item.key === "copy-link") {
+      if (item.key === "copy-link" || item.key === "copy-branch-name") {
         return {
           ...item,
-          shouldRender: !isPeekMode,
+          shouldRender: !isPeekMode && item.shouldRender !== false,
         };
       }
       return item;

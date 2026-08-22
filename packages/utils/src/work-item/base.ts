@@ -336,6 +336,45 @@ export const generateWorkItemLink = ({
   return isArchived ? archiveIssueLink : isEpic ? epicLink : workItemLink;
 };
 
+const sanitizeBranchSegment = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const truncateBranchSlug = (value: string, maxLength: number): string => {
+  if (value.length <= maxLength) return value;
+  const cut = value.slice(0, maxLength);
+  const lastHyphen = cut.lastIndexOf("-");
+  return lastHyphen > 0 ? cut.slice(0, lastHyphen) : cut.replace(/-+$/g, "");
+};
+
+export const generateWorkItemBranchName = ({
+  displayName,
+  email,
+  projectIdentifier,
+  sequenceId,
+  title,
+}: {
+  displayName?: string | null;
+  email?: string | null;
+  projectIdentifier?: string | null;
+  sequenceId?: string | number | null;
+  title?: string | null;
+}): string => {
+  if (!projectIdentifier || (sequenceId !== 0 && !sequenceId)) return "";
+
+  const sanitizedUsername =
+    sanitizeBranchSegment(displayName ?? "") || sanitizeBranchSegment((email ?? "").split("@")[0] ?? "");
+
+  const sanitizedSlug = truncateBranchSlug(sanitizeBranchSegment(title ?? ""), 50);
+
+  const usernamePrefix = sanitizedUsername ? `${sanitizedUsername}/` : "";
+  const slugSuffix = sanitizedSlug ? `-${sanitizedSlug}` : "";
+
+  return `${usernamePrefix}${projectIdentifier.toUpperCase()}-${sequenceId}${slugSuffix}`;
+};
+
 export const getIssuePriorityFilters = (priorityKey: TIssuePriorities): TIssueFilterPriorityObject | undefined => {
   const currentIssuePriority: TIssueFilterPriorityObject | undefined =
     ISSUE_PRIORITY_FILTERS && ISSUE_PRIORITY_FILTERS.length > 0

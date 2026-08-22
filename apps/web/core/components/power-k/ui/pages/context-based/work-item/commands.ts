@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import {
   Bell,
   BellOff,
+  GitBranch,
   Signal,
   TagIcon,
   TicketCheck,
@@ -25,7 +26,7 @@ import { LinkIcon, TrashIcon, ContrastIcon, DiceIcon, DoubleCircleIcon } from "@
 import { setToast, TOAST_TYPE } from "@plane/propel/toast";
 import type { ICycle, IIssueLabel, IModule, TIssue, TIssuePriorities } from "@plane/types";
 import { EIssueServiceType, EUserPermissions } from "@plane/types";
-import { copyTextToClipboard } from "@plane/utils";
+import { copyTextToClipboard, generateWorkItemBranchName } from "@plane/utils";
 // components
 import type { TPowerKCommandConfig } from "@/components/power-k/core/types";
 // hooks
@@ -145,55 +146,85 @@ export const usePowerKWorkItemContextBasedCommands = (): TPowerKCommandConfig[] 
   const copyWorkItemIdToClipboard = useCallback(() => {
     const id = `${projectDetails?.identifier}-${entityDetails?.sequence_id}`;
     copyTextToClipboard(id)
-      .then(() => {
+      .then(() =>
         setToast({
           type: TOAST_TYPE.SUCCESS,
           title: t("power_k.contextual_actions.work_item.copy_id_toast_success"),
-        });
-      })
-      .catch(() => {
+        })
+      )
+      .catch(() =>
         setToast({
           type: TOAST_TYPE.ERROR,
           title: t("power_k.contextual_actions.work_item.copy_id_toast_error"),
-        });
-      });
+        })
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityDetails?.sequence_id, projectDetails?.identifier]);
 
   const copyWorkItemTitleToClipboard = useCallback(() => {
     copyTextToClipboard(entityDetails?.name ?? "")
-      .then(() => {
+      .then(() =>
         setToast({
           type: TOAST_TYPE.SUCCESS,
           title: t("power_k.contextual_actions.work_item.copy_title_toast_success"),
-        });
-      })
-      .catch(() => {
+        })
+      )
+      .catch(() =>
         setToast({
           type: TOAST_TYPE.ERROR,
           title: t("power_k.contextual_actions.work_item.copy_title_toast_error"),
-        });
-      });
+        })
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityDetails?.name]);
 
   const copyWorkItemUrlToClipboard = useCallback(() => {
     const url = new URL(window.location.href);
     copyTextToClipboard(url.href)
-      .then(() => {
+      .then(() =>
         setToast({
           type: TOAST_TYPE.SUCCESS,
           title: t("power_k.contextual_actions.work_item.copy_url_toast_success"),
-        });
-      })
-      .catch(() => {
+        })
+      )
+      .catch(() =>
         setToast({
           type: TOAST_TYPE.ERROR,
           title: t("power_k.contextual_actions.work_item.copy_url_toast_error"),
-        });
-      });
+        })
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const copyWorkItemBranchNameToClipboard = useCallback(() => {
+    const branchName = generateWorkItemBranchName({
+      displayName: currentUser?.display_name,
+      email: currentUser?.email,
+      projectIdentifier: projectDetails?.identifier,
+      sequenceId: entityDetails?.sequence_id,
+      title: entityDetails?.name,
+    });
+    copyTextToClipboard(branchName)
+      .then(() =>
+        setToast({
+          type: TOAST_TYPE.SUCCESS,
+          title: t("common.branch_name_copied_to_clipboard"),
+        })
+      )
+      .catch(() =>
+        setToast({
+          type: TOAST_TYPE.ERROR,
+          title: t("toast.error"),
+        })
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    entityDetails?.name,
+    entityDetails?.sequence_id,
+    projectDetails?.identifier,
+    currentUser?.display_name,
+    currentUser?.email,
+  ]);
 
   return [
     {
@@ -289,6 +320,19 @@ export const usePowerKWorkItemContextBasedCommands = (): TPowerKCommandConfig[] 
       modifierShortcut: "shift+e",
       isEnabled: () => isEstimateEnabled && isEditingAllowed,
       isVisible: () => isEstimateEnabled && isEditingAllowed,
+      closeOnSelect: true,
+    },
+    {
+      id: "copy_work_item_branch_name",
+      i18n_title: "power_k.contextual_actions.work_item.copy_branch_name",
+      icon: GitBranch,
+      group: "contextual",
+      contextType: "work-item",
+      type: "action",
+      action: copyWorkItemBranchNameToClipboard,
+      modifierShortcut: "cmd+shift+.",
+      isEnabled: () => Boolean(entityDetails?.sequence_id && projectDetails?.identifier),
+      isVisible: () => Boolean(entityDetails?.sequence_id && projectDetails?.identifier),
       closeOnSelect: true,
     },
     {

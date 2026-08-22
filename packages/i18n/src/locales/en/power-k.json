@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Some error occurred while copying the work item title to clipboard.",
         "copy_url": "Copy URL",
         "copy_url_toast_success": "Work item URL copied to clipboard.",
-        "copy_url_toast_error": "Some error occurred while copying the work item URL to clipboard."
+        "copy_url_toast_error": "Some error occurred while copying the work item URL to clipboard.",
+        "copy_branch_name": "Copy branch name"
       },
       "cycle": {
         "title": "Cycle actions",

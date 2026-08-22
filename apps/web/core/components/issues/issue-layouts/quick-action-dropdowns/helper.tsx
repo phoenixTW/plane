@@ -5,14 +5,22 @@
  */
 
 import { useMemo } from "react";
-import { XCircle, ArchiveRestoreIcon } from "lucide-react";
+import { XCircle, ArchiveRestoreIcon, GitBranch } from "lucide-react";
 // plane imports
 import { useTranslation } from "@plane/i18n";
 import { LinkIcon, CopyIcon, NewTabIcon, EditIcon, ArchiveIcon, TrashIcon } from "@plane/propel/icons";
 import { TOAST_TYPE, setToast } from "@plane/propel/toast";
 import type { EIssuesStoreType, TIssue } from "@plane/types";
 import type { TContextMenuItem } from "@plane/ui";
-import { copyUrlToClipboard, generateWorkItemLink } from "@plane/utils";
+import {
+  copyTextToClipboard,
+  copyUrlToClipboard,
+  generateWorkItemBranchName,
+  generateWorkItemLink,
+} from "@plane/utils";
+// hooks
+import { useUser } from "@/hooks/store/user";
+// local imports
 import { createCopyMenuWithDuplication } from "./copy-menu-helper";
 
 // Generic helper function to handle optional function calls gracefully
@@ -81,6 +89,8 @@ export interface MenuItemFactoryProps {
 
 // Common action handlers hook
 export const useIssueActionHandlers = (props: MenuItemFactoryProps) => {
+  const { t } = useTranslation();
+  const { data: currentUser } = useUser();
   const { issue, workspaceSlug, projectIdentifier, handleRestore } = props;
 
   const workItemLink = useMemo(
@@ -95,12 +105,33 @@ export const useIssueActionHandlers = (props: MenuItemFactoryProps) => {
     [workspaceSlug, projectIdentifier, issue]
   );
 
+  const workItemBranchName = useMemo(
+    () =>
+      generateWorkItemBranchName({
+        displayName: currentUser?.display_name,
+        email: currentUser?.email,
+        projectIdentifier,
+        sequenceId: issue?.sequence_id,
+        title: issue?.name,
+      }),
+    [currentUser?.display_name, currentUser?.email, projectIdentifier, issue?.sequence_id, issue?.name]
+  );
+
   const handleCopyIssueLink = () =>
     copyUrlToClipboard(workItemLink).then(() =>
       setToast({
         type: TOAST_TYPE.SUCCESS,
         title: "Link copied",
         message: "Work item link copied to clipboard",
+      })
+    );
+
+  const handleCopyIssueBranchName = () =>
+    copyTextToClipboard(workItemBranchName).then(() =>
+      setToast({
+        type: TOAST_TYPE.SUCCESS,
+        title: t("common.actions.copy_branch_name"),
+        message: t("common.branch_name_copied_to_clipboard"),
       })
     );
 
@@ -131,7 +162,9 @@ export const useIssueActionHandlers = (props: MenuItemFactoryProps) => {
 
   return {
     workItemLink,
+    workItemBranchName,
     handleCopyIssueLink,
+    handleCopyIssueBranchName,
     handleOpenInNewTab,
     handleIssueRestore,
   };
@@ -205,6 +238,14 @@ export const useMenuItemFactory = (props: MenuItemFactoryProps) => {
     action: actionHandlers.handleCopyIssueLink,
   });
 
+  const createCopyBranchNameMenuItem = (): TContextMenuItem => ({
+    key: "copy-branch-name",
+    title: t("common.actions.copy_branch_name"),
+    icon: GitBranch,
+    action: actionHandlers.handleCopyIssueBranchName,
+    shouldRender: Boolean(actionHandlers.workItemBranchName),
+  });
+
   const createRemoveFromCycleMenuItem = (): TContextMenuItem => ({
     key: "remove-from-cycle",
     title: "Remove from cycle",
@@ -257,6 +298,7 @@ export const useMenuItemFactory = (props: MenuItemFactoryProps) => {
     createCopyMenuItem,
     createOpenInNewTabMenuItem,
     createCopyLinkMenuItem,
+    createCopyBranchNameMenuItem,
     createRemoveFromCycleMenuItem,
     createRemoveFromModuleMenuItem,
     createArchiveMenuItem,
@@ -275,6 +317,7 @@ export const useProjectIssueMenuItems = (props: MenuItemFactoryProps): TContextM
       factory.createCopyMenuItem(),
       factory.createOpenInNewTabMenuItem(),
       factory.createCopyLinkMenuItem(),
+      factory.createCopyBranchNameMenuItem(),
       factory.createArchiveMenuItem(),
       factory.createDeleteMenuItem(),
     ],
@@ -289,6 +332,7 @@ export const useWorkItemDetailMenuItems = (props: MenuItemFactoryProps): TContex
     () => [
       factory.createCopyMenuItem(props.workspaceSlug),
       factory.createOpenInNewTabMenuItem(),
+      factory.createCopyBranchNameMenuItem(),
       factory.createArchiveMenuItem(),
       factory.createRestoreMenuItem(),
       factory.createDeleteMenuItem(),
@@ -307,6 +351,7 @@ export const useAllIssueMenuItems = (props: MenuItemFactoryProps): TContextMenuI
       factory.createCopyMenuItem(),
       factory.createOpenInNewTabMenuItem(),
       factory.createCopyLinkMenuItem(),
+      factory.createCopyBranchNameMenuItem(),
       factory.createArchiveMenuItem(),
       factory.createDeleteMenuItem(),
     ],
@@ -331,6 +376,7 @@ export const useCycleIssueMenuItems = (props: MenuItemFactoryProps): TContextMen
       factory.createCopyMenuItem(),
       factory.createOpenInNewTabMenuItem(),
       factory.createCopyLinkMenuItem(),
+      factory.createCopyBranchNameMenuItem(),
       factory.createRemoveFromCycleMenuItem(),
       factory.createArchiveMenuItem(),
       factory.createDeleteMenuItem(),
@@ -357,6 +403,7 @@ export const useModuleIssueMenuItems = (props: MenuItemFactoryProps): TContextMe
       factory.createCopyMenuItem(),
       factory.createOpenInNewTabMenuItem(),
       factory.createCopyLinkMenuItem(),
+      factory.createCopyBranchNameMenuItem(),
       factory.createRemoveFromModuleMenuItem(),
       factory.createArchiveMenuItem(),
       factory.createDeleteMenuItem(),
@@ -374,6 +421,7 @@ export const useArchivedIssueMenuItems = (props: MenuItemFactoryProps): TContext
       factory.createRestoreMenuItem(),
       factory.createOpenInNewTabMenuItem(),
       factory.createCopyLinkMenuItem(),
+      factory.createCopyBranchNameMenuItem(),
       factory.createDeleteMenuItem(),
     ],
     [factory]
