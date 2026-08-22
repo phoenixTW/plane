@@ -47,6 +47,8 @@ export function HeaderColumn(props: Props) {
 
   if (!propertyDetails) return null;
 
+  const { ascendingOrderKey, descendingOrderKey } = propertyDetails;
+
   return (
     <CustomMenu
       customButtonClassName="clickable !w-full"
@@ -59,9 +61,9 @@ export function HeaderColumn(props: Props) {
             {property === "sub_issue_count" && isEpic ? t("issue.label", { count: 2 }) : t(propertyDetails.i18n_title)}
           </div>
           <div className="ml-3 flex">
-            {activeSortingProperty === property && (
+            {activeSortingProperty === property && ascendingOrderKey && descendingOrderKey && (
               <div className="flex h-3.5 w-3.5 items-center justify-center rounded-full">
-                {propertyDetails.ascendingOrderKey === displayFilters.order_by ? (
+                {ascendingOrderKey === displayFilters.order_by ? (
                   <ArrowDownWideNarrow className="h-3 w-3" />
                 ) : (
                   <ArrowUpNarrowWide className="h-3 w-3" />
@@ -76,44 +78,46 @@ export function HeaderColumn(props: Props) {
       placement="bottom-start"
       closeOnSelect
     >
-      <CustomMenu.MenuItem onClick={() => handleOrderBy(propertyDetails.ascendingOrderKey, property)}>
-        <div
-          className={`flex items-center justify-between gap-1.5 px-1 ${
-            selectedMenuItem === `${propertyDetails.ascendingOrderKey}_${property}`
-              ? "text-primary"
-              : "text-secondary hover:text-primary"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <ArrowDownWideNarrow className="h-3 w-3 stroke-[1.5]" />
-            <span>{propertyDetails.ascendingOrderTitle}</span>
-            <MoveRight className="h-3 w-3" />
-            <span>{propertyDetails.descendingOrderTitle}</span>
-          </div>
+      {ascendingOrderKey && descendingOrderKey && (
+        <CustomMenu.MenuItem onClick={() => handleOrderBy(ascendingOrderKey, property)}>
+          <div
+            className={`flex items-center justify-between gap-1.5 px-1 ${
+              selectedMenuItem === `${ascendingOrderKey}_${property}`
+                ? "text-primary"
+                : "text-secondary hover:text-primary"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <ArrowDownWideNarrow className="h-3 w-3 stroke-[1.5]" />
+              <span>{propertyDetails.ascendingOrderTitle}</span>
+              <MoveRight className="h-3 w-3" />
+              <span>{propertyDetails.descendingOrderTitle}</span>
+            </div>
 
-          {selectedMenuItem === `${propertyDetails.ascendingOrderKey}_${property}` && <CheckIcon className="h-3 w-3" />}
-        </div>
-      </CustomMenu.MenuItem>
-      <CustomMenu.MenuItem onClick={() => handleOrderBy(propertyDetails.descendingOrderKey, property)}>
-        <div
-          className={`flex items-center justify-between gap-1.5 px-1 ${
-            selectedMenuItem === `${propertyDetails.descendingOrderKey}_${property}`
-              ? "text-primary"
-              : "text-secondary hover:text-primary"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <ArrowUpNarrowWide className="h-3 w-3 stroke-[1.5]" />
-            <span>{propertyDetails.descendingOrderTitle}</span>
-            <MoveRight className="h-3 w-3" />
-            <span>{propertyDetails.ascendingOrderTitle}</span>
+            {selectedMenuItem === `${ascendingOrderKey}_${property}` && <CheckIcon className="h-3 w-3" />}
           </div>
+        </CustomMenu.MenuItem>
+      )}
+      {ascendingOrderKey && descendingOrderKey && (
+        <CustomMenu.MenuItem onClick={() => handleOrderBy(descendingOrderKey, property)}>
+          <div
+            className={`flex items-center justify-between gap-1.5 px-1 ${
+              selectedMenuItem === `${descendingOrderKey}_${property}`
+                ? "text-primary"
+                : "text-secondary hover:text-primary"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <ArrowUpNarrowWide className="h-3 w-3 stroke-[1.5]" />
+              <span>{propertyDetails.descendingOrderTitle}</span>
+              <MoveRight className="h-3 w-3" />
+              <span>{propertyDetails.ascendingOrderTitle}</span>
+            </div>
 
-          {selectedMenuItem === `${propertyDetails.descendingOrderKey}_${property}` && (
-            <CheckIcon className="h-3 w-3" />
-          )}
-        </div>
-      </CustomMenu.MenuItem>
+            {selectedMenuItem === `${descendingOrderKey}_${property}` && <CheckIcon className="h-3 w-3" />}
+          </div>
+        </CustomMenu.MenuItem>
+      )}
       {selectedMenuItem &&
         selectedMenuItem !== "" &&
         displayFilters?.order_by !== "-created_at" &&

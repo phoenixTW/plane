@@ -175,6 +175,8 @@ export interface IIssueDisplayProperties {
   modules?: boolean;
   cycle?: boolean;
   issue_type?: boolean;
+  blocked_by_count?: boolean;
+  blocking_count?: boolean;
 }
 
 export type TIssueKanbanFilters = {
