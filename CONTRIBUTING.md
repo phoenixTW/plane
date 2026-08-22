@@ -242,6 +242,22 @@ Before submitting your contribution, please ensure the following:
 
 Happy translating! 🌍✨
 
+## Syncing with upstream
+
+This fork (`phoenixTW/plane`) keeps custom functionality that isn't
+contributed back to `makeplane/plane`. To pull in upstream fixes and
+features periodically:
+
+```bash
+git remote -v | grep upstream || git remote add upstream git@github.com:makeplane/plane.git
+git fetch upstream
+git merge upstream/preview
+```
+
+Resolve conflicts where this fork's custom code touches the same files
+upstream changed, then push `main` as usual. There's no automated sync —
+do this manually, on your own cadence, so conflicts get a human's judgment.
+
 ## Need help? Questions and suggestions
 
 Questions, suggestions, and thoughts are most welcome. We can also be reached in our [Forum](https://forum.plane.so).
