@@ -10,17 +10,10 @@ import { xor } from "lodash-es";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 // icons
-import { Paperclip } from "lucide-react";
+import { Ban, CircleX, Paperclip } from "lucide-react";
 // i18n
 import { useTranslation } from "@plane/i18n";
-import {
-  BlockedIcon,
-  BlockerIcon,
-  LinkIcon,
-  StartDatePropertyIcon,
-  ViewsIcon,
-  DueDatePropertyIcon,
-} from "@plane/propel/icons";
+import { LinkIcon, StartDatePropertyIcon, ViewsIcon, DueDatePropertyIcon } from "@plane/propel/icons";
 import { Tooltip } from "@plane/propel/tooltip";
 import type { TIssue, IIssueDisplayProperties, TIssuePriorities } from "@plane/types";
 // ui
@@ -459,7 +452,7 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
           issue={issue}
           relationType="blocked_by"
           count={blockedByCount}
-          icon={BlockedIcon}
+          icon={Ban}
           chipClassName={ISSUE_RELATION_OPTIONS.blocked_by.className}
         />
       </WithDisplayPropertiesHOC>
@@ -474,7 +467,7 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
           issue={issue}
           relationType="blocking"
           count={blockingCount}
-          icon={BlockerIcon}
+          icon={CircleX}
           chipClassName={ISSUE_RELATION_OPTIONS.blocking.className}
         />
       </WithDisplayPropertiesHOC>

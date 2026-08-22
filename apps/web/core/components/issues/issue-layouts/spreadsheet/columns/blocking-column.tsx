@@ -6,7 +6,7 @@
 
 import { observer } from "mobx-react";
 // icons
-import { BlockerIcon } from "@plane/propel/icons";
+import { CircleX } from "lucide-react";
 // ui
 import { Row } from "@plane/ui";
 // types
@@ -33,7 +33,7 @@ export const SpreadsheetBlockingColumn = observer(function SpreadsheetBlockingCo
           issue={issue}
           relationType="blocking"
           count={count}
-          icon={BlockerIcon}
+          icon={CircleX}
           chipClassName={ISSUE_RELATION_OPTIONS.blocking.className}
         />
       )}
