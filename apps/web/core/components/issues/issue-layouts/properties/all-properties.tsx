@@ -13,7 +13,14 @@ import { useParams } from "next/navigation";
 import { Paperclip } from "lucide-react";
 // i18n
 import { useTranslation } from "@plane/i18n";
-import { LinkIcon, StartDatePropertyIcon, ViewsIcon, DueDatePropertyIcon } from "@plane/propel/icons";
+import {
+  BlockedIcon,
+  BlockerIcon,
+  LinkIcon,
+  StartDatePropertyIcon,
+  ViewsIcon,
+  DueDatePropertyIcon,
+} from "@plane/propel/icons";
 import { Tooltip } from "@plane/propel/tooltip";
 import type { TIssue, IIssueDisplayProperties, TIssuePriorities } from "@plane/types";
 // ui
@@ -82,6 +89,8 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
   // derived values
   const stateDetails = getStateById(issue.state_id);
   const subIssueCount = issue?.sub_issues_count ?? 0;
+  const blockedByCount = issue?.blocked_by_count ?? 0;
+  const blockingCount = issue?.blocking_count ?? 0;
 
   const issueOperations = useMemo(
     () => ({
@@ -437,6 +446,42 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
           </Tooltip>
         </WithDisplayPropertiesHOC>
       )}
+
+      {/* blocked-by count */}
+      <WithDisplayPropertiesHOC
+        displayProperties={displayProperties}
+        displayPropertyKey="blocked_by_count"
+        shouldRenderProperty={(properties) => !!properties.blocked_by_count && !!blockedByCount}
+      >
+        <Tooltip
+          tooltipContent={t("issue.relation.blocked_by_count_many", { count: blockedByCount })}
+          isMobile={isMobile}
+          renderByDefault={false}
+        >
+          <div className="flex h-5 flex-shrink-0 items-center justify-center gap-2 overflow-hidden rounded-sm border-[0.5px] border-strong bg-danger-subtle px-2.5 py-1 text-danger-primary">
+            <BlockedIcon className="h-3 w-3 flex-shrink-0" />
+            <div className="text-caption-sm-regular">{blockedByCount}</div>
+          </div>
+        </Tooltip>
+      </WithDisplayPropertiesHOC>
+
+      {/* blocking count */}
+      <WithDisplayPropertiesHOC
+        displayProperties={displayProperties}
+        displayPropertyKey="blocking_count"
+        shouldRenderProperty={(properties) => !!properties.blocking_count && !!blockingCount}
+      >
+        <Tooltip
+          tooltipContent={t("issue.relation.blocking_count_many", { count: blockingCount })}
+          isMobile={isMobile}
+          renderByDefault={false}
+        >
+          <div className="bg-yellow-500/20 text-yellow-700 flex h-5 flex-shrink-0 items-center justify-center gap-2 overflow-hidden rounded-sm border-[0.5px] border-strong px-2.5 py-1">
+            <BlockerIcon className="h-3 w-3 flex-shrink-0" />
+            <div className="text-caption-sm-regular">{blockingCount}</div>
+          </div>
+        </Tooltip>
+      </WithDisplayPropertiesHOC>
 
       {/* attachments */}
       <WithDisplayPropertiesHOC
