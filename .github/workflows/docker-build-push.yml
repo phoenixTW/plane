@@ -145,7 +145,7 @@ jobs:
           gh release create "$VERSION" \
             --repo "${{ github.repository }}" \
             --title "$VERSION" \
-            --generate-release-notes \
+            --generate-notes \
             release-assets/setup.sh \
             release-assets/restore.sh \
             release-assets/restore-airgapped.sh \
