@@ -13,6 +13,7 @@ from plane.db.models import (
     ProjectMember,
     State,
 )
+from plane.db.models.issue import IssueRelationChoices
 pytestmark = pytest.mark.django_db
 
 
@@ -40,7 +41,7 @@ def _relation(blocked, blocker, project, workspace, user):
     return IssueRelation.objects.create(
         issue=blocked,
         related_issue=blocker,
-        relation_type="blocked_by",
+        relation_type=IssueRelationChoices.BLOCKED_BY.value,
         project=project,
         workspace=workspace,
         created_by=user,

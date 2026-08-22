@@ -6,6 +6,7 @@ from django.db.models import F, Func, IntegerField, OuterRef, Subquery, Value
 from django.db.models.functions import Coalesce
 
 from plane.db.models import IssueRelation
+from plane.db.models.issue import IssueRelationChoices
 from plane.db.models.state import StateGroup
 
 RESOLVED_STATE_GROUPS = [StateGroup.COMPLETED.value, StateGroup.CANCELLED.value]
@@ -28,7 +29,7 @@ def blocked_by_count_subquery(outer_ref="id"):
     return _count(
         IssueRelation.objects.filter(
             issue_id=OuterRef(outer_ref),
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             deleted_at__isnull=True,
         )
         .exclude(related_issue__state__group__in=RESOLVED_STATE_GROUPS)
@@ -42,7 +43,7 @@ def blocking_count_subquery(outer_ref="id"):
     return _count(
         IssueRelation.objects.filter(
             related_issue_id=OuterRef(outer_ref),
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             deleted_at__isnull=True,
         )
         .exclude(issue__state__group__in=RESOLVED_STATE_GROUPS)

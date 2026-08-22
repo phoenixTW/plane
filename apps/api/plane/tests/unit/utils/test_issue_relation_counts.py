@@ -6,6 +6,7 @@ import pytest
 from django.utils import timezone
 
 from plane.db.models import Issue, IssueRelation, Project, State
+from plane.db.models.issue import IssueRelationChoices
 from plane.utils.issue_relation_counts import blocked_by_count_subquery, blocking_count_subquery
 
 pytestmark = pytest.mark.django_db
@@ -61,7 +62,7 @@ class TestIssueRelationCounts:
         IssueRelation.objects.create(
             issue=blocked,
             related_issue=active_blocker,
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             project=project,
             workspace=workspace,
             created_by=create_user,
@@ -69,7 +70,7 @@ class TestIssueRelationCounts:
         IssueRelation.objects.create(
             issue=blocked,
             related_issue=done_blocker,
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             project=project,
             workspace=workspace,
             created_by=create_user,
@@ -104,7 +105,7 @@ class TestIssueRelationCounts:
             IssueRelation.objects.create(
                 issue=blocked,
                 related_issue=blocker,
-                relation_type="blocked_by",
+                relation_type=IssueRelationChoices.BLOCKED_BY.value,
                 project=project,
                 workspace=workspace,
                 created_by=create_user,
@@ -126,7 +127,7 @@ class TestIssueRelationCounts:
         relation = IssueRelation.objects.create(
             issue=blocked,
             related_issue=blocker,
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             project=project,
             workspace=workspace,
             created_by=create_user,
@@ -151,7 +152,7 @@ class TestIssueRelationCounts:
         IssueRelation.objects.create(
             issue=blocked,
             related_issue=blocker,
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             project=project_a,
             workspace=workspace,
             created_by=create_user,
@@ -188,7 +189,7 @@ class TestIssueRelationCounts:
         relation = IssueRelation.objects.create(
             issue=blocked,
             related_issue=blocker,
-            relation_type="blocked_by",
+            relation_type=IssueRelationChoices.BLOCKED_BY.value,
             project=project,
             workspace=workspace,
             created_by=create_user,
