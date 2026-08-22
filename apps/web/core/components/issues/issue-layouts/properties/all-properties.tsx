@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import type { SyntheticEvent } from "react";
+import type { FC, SyntheticEvent } from "react";
 import { useCallback, useMemo } from "react";
 import { xor } from "lodash-es";
 import { observer } from "mobx-react";
@@ -13,7 +13,15 @@ import { useParams } from "next/navigation";
 import { Paperclip } from "lucide-react";
 // i18n
 import { useTranslation } from "@plane/i18n";
-import { LinkIcon, StartDatePropertyIcon, ViewsIcon, DueDatePropertyIcon } from "@plane/propel/icons";
+import {
+  BlockedIcon,
+  BlockerIcon,
+  LinkIcon,
+  StartDatePropertyIcon,
+  ViewsIcon,
+  DueDatePropertyIcon,
+  type ISvgIcons,
+} from "@plane/propel/icons";
 import { Tooltip } from "@plane/propel/tooltip";
 import type { TIssue, IIssueDisplayProperties, TIssuePriorities } from "@plane/types";
 // ui
@@ -25,6 +33,7 @@ import {
   shouldHighlightIssueDueDate,
 } from "@plane/utils";
 // components
+import { ISSUE_RELATION_OPTIONS } from "@/components/relations";
 import { CycleDropdown } from "@/components/dropdowns/cycle";
 import { DateDropdown } from "@/components/dropdowns/date";
 import { DateRangeDropdown } from "@/components/dropdowns/date-range";
@@ -45,6 +54,28 @@ import { usePlatformOS } from "@/hooks/use-platform-os";
 // local components
 import { IssuePropertyLabels } from "./labels";
 import { WithDisplayPropertiesHOC } from "./with-display-properties-HOC";
+
+interface IRelationCountChipProps {
+  count: number;
+  icon: FC<ISvgIcons>;
+  tooltipContent: string;
+  chipClassName: string;
+  isMobile: boolean;
+}
+
+const RelationCountChip = ({ count, icon: Icon, tooltipContent, chipClassName, isMobile }: IRelationCountChipProps) => (
+  <Tooltip tooltipContent={tooltipContent} isMobile={isMobile} renderByDefault={false}>
+    <div
+      className={cn(
+        "flex h-5 flex-shrink-0 items-center justify-center gap-2 overflow-hidden rounded-sm border-[0.5px] border-strong px-2.5 py-1",
+        chipClassName
+      )}
+    >
+      <Icon className="h-3 w-3 flex-shrink-0" />
+      <div className="text-caption-sm-regular">{count}</div>
+    </div>
+  </Tooltip>
+);
 
 export interface IIssueProperties {
   issue: TIssue;
@@ -82,6 +113,8 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
   // derived values
   const stateDetails = getStateById(issue.state_id);
   const subIssueCount = issue?.sub_issues_count ?? 0;
+  const blockedByCount = issue?.blocked_by_count ?? 0;
+  const blockingCount = issue?.blocking_count ?? 0;
 
   const issueOperations = useMemo(
     () => ({
@@ -437,6 +470,36 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
           </Tooltip>
         </WithDisplayPropertiesHOC>
       )}
+
+      {/* blocked-by count */}
+      <WithDisplayPropertiesHOC
+        displayProperties={displayProperties}
+        displayPropertyKey="blocked_by_count"
+        shouldRenderProperty={(properties) => !!properties.blocked_by_count && !!blockedByCount}
+      >
+        <RelationCountChip
+          count={blockedByCount}
+          icon={BlockedIcon}
+          tooltipContent={t("issue.relation.blocked_by_count", { count: blockedByCount })}
+          chipClassName={ISSUE_RELATION_OPTIONS.blocked_by.className}
+          isMobile={isMobile}
+        />
+      </WithDisplayPropertiesHOC>
+
+      {/* blocking count */}
+      <WithDisplayPropertiesHOC
+        displayProperties={displayProperties}
+        displayPropertyKey="blocking_count"
+        shouldRenderProperty={(properties) => !!properties.blocking_count && !!blockingCount}
+      >
+        <RelationCountChip
+          count={blockingCount}
+          icon={BlockerIcon}
+          tooltipContent={t("issue.relation.blocking_count", { count: blockingCount })}
+          chipClassName={ISSUE_RELATION_OPTIONS.blocking.className}
+          isMobile={isMobile}
+        />
+      </WithDisplayPropertiesHOC>
 
       {/* attachments */}
       <WithDisplayPropertiesHOC
