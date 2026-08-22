@@ -1,0 +1,81 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_OWNER: phoenixtw
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    name: Build-Push ${{ matrix.image.name }}
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - name: plane-frontend
+            dockerfile: apps/web/Dockerfile.web
+            context: .
+          - name: plane-space
+            dockerfile: apps/space/Dockerfile.space
+            context: .
+          - name: plane-admin
+            dockerfile: apps/admin/Dockerfile.admin
+            context: .
+          - name: plane-live
+            dockerfile: apps/live/Dockerfile.live
+            context: .
+          - name: plane-backend
+            dockerfile: apps/api/Dockerfile.api
+            context: ./apps/api
+          - name: plane-proxy
+            dockerfile: apps/proxy/Dockerfile.ce
+            context: ./apps/proxy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4.0.0
+
+      - name: Compute image metadata
+        id: meta
+        uses: docker/metadata-action@v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.image.name }}
+          tags: |
+            type=raw,value=main
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v7.0.0
+        with:
+          context: ${{ matrix.image.context }}
+          file: ${{ matrix.image.dockerfile }}
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.image.name }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.image.name }}:buildcache,mode=max
