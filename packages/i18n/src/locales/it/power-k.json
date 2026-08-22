@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Si è verificato un errore durante la copia del titolo dell'elemento di lavoro negli appunti.",
         "copy_url": "Copia URL",
         "copy_url_toast_success": "URL dell'elemento di lavoro copiato negli appunti.",
-        "copy_url_toast_error": "Si è verificato un errore durante la copia dell'URL dell'elemento di lavoro negli appunti."
+        "copy_url_toast_error": "Si è verificato un errore durante la copia dell'URL dell'elemento di lavoro negli appunti.",
+        "copy_branch_name": "Copia nome del branch"
       },
       "cycle": {
         "title": "Azioni ciclo",

@@ -27,7 +27,8 @@
         "copy_title_toast_error": "复制工作项标题到剪贴板时出错。",
         "copy_url": "复制 URL",
         "copy_url_toast_success": "工作项 URL 已复制到剪贴板。",
-        "copy_url_toast_error": "复制工作项 URL 到剪贴板时出错。"
+        "copy_url_toast_error": "复制工作项 URL 到剪贴板时出错。",
+        "copy_branch_name": "复制分支名称"
       },
       "cycle": {
         "title": "周期操作",

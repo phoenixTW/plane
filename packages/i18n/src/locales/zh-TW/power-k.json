@@ -27,7 +27,8 @@
         "copy_title_toast_error": "複製工作事項標題至剪貼簿時發生錯誤。",
         "copy_url": "複製 URL",
         "copy_url_toast_success": "工作事項 URL 已複製到剪貼簿。",
-        "copy_url_toast_error": "複製工作事項 URL 至剪貼簿時發生錯誤。"
+        "copy_url_toast_error": "複製工作事項 URL 至剪貼簿時發生錯誤。",
+        "copy_branch_name": "複製分支名稱"
       },
       "cycle": {
         "title": "週期操作",

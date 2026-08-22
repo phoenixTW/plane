@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Une erreur s’est produite lors de la copie du titre de l’élément de travail dans le presse-papiers.",
         "copy_url": "Copier l’URL",
         "copy_url_toast_success": "URL de l’élément de travail copiée dans le presse-papiers.",
-        "copy_url_toast_error": "Une erreur s’est produite lors de la copie de l’URL de l’élément de travail dans le presse-papiers."
+        "copy_url_toast_error": "Une erreur s’est produite lors de la copie de l’URL de l’élément de travail dans le presse-papiers.",
+        "copy_branch_name": "Copier le nom de la branche"
       },
       "cycle": {
         "title": "Actions sur le cycle",

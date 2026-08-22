@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Wystąpił błąd podczas kopiowania tytułu elementu pracy do schowka.",
         "copy_url": "Kopiuj URL",
         "copy_url_toast_success": "URL elementu pracy skopiowano do schowka.",
-        "copy_url_toast_error": "Wystąpił błąd podczas kopiowania URL elementu pracy do schowka."
+        "copy_url_toast_error": "Wystąpił błąd podczas kopiowania URL elementu pracy do schowka.",
+        "copy_branch_name": "Kopiuj nazwę gałęzi"
       },
       "cycle": {
         "title": "Akcje cyklu",

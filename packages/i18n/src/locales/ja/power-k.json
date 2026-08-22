@@ -27,7 +27,8 @@
         "copy_title_toast_error": "作業項目のタイトルのコピー中にエラーが発生しました。",
         "copy_url": "URLをコピー",
         "copy_url_toast_success": "作業項目のURLをクリップボードにコピーしました。",
-        "copy_url_toast_error": "作業項目のURLのコピー中にエラーが発生しました。"
+        "copy_url_toast_error": "作業項目のURLのコピー中にエラーが発生しました。",
+        "copy_branch_name": "ブランチ名をコピー"
       },
       "cycle": {
         "title": "サイクルのアクション",

@@ -27,7 +27,8 @@
         "copy_title_toast_error": "작업 항목 제목을 클립보드에 복사하는 중 오류가 발생했습니다.",
         "copy_url": "URL 복사",
         "copy_url_toast_success": "작업 항목 URL이 클립보드에 복사되었습니다.",
-        "copy_url_toast_error": "작업 항목 URL을 클립보드에 복사하는 중 오류가 발생했습니다."
+        "copy_url_toast_error": "작업 항목 URL을 클립보드에 복사하는 중 오류가 발생했습니다.",
+        "copy_branch_name": "브랜치 이름 복사"
       },
       "cycle": {
         "title": "주기 액션",

@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Terjadi kesalahan saat menyalin judul item kerja ke clipboard.",
         "copy_url": "Salin URL",
         "copy_url_toast_success": "URL item kerja disalin ke clipboard.",
-        "copy_url_toast_error": "Terjadi kesalahan saat menyalin URL item kerja ke clipboard."
+        "copy_url_toast_error": "Terjadi kesalahan saat menyalin URL item kerja ke clipboard.",
+        "copy_branch_name": "Salin nama branch"
       },
       "cycle": {
         "title": "Aksi siklus",

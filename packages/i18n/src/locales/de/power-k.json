@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Fehler beim Kopieren des Arbeitselement-Titels in die Zwischenablage.",
         "copy_url": "URL kopieren",
         "copy_url_toast_success": "Arbeitselement-URL in die Zwischenablage kopiert.",
-        "copy_url_toast_error": "Fehler beim Kopieren der Arbeitselement-URL in die Zwischenablage."
+        "copy_url_toast_error": "Fehler beim Kopieren der Arbeitselement-URL in die Zwischenablage.",
+        "copy_branch_name": "Branch-Name kopieren"
       },
       "cycle": {
         "title": "Zyklus-Aktionen",

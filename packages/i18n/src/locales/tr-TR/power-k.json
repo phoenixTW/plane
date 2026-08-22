@@ -27,7 +27,8 @@
         "copy_title_toast_error": "İş öğesi başlığı panoya kopyalanırken bir hata oluştu.",
         "copy_url": "URL'yi kopyala",
         "copy_url_toast_success": "İş öğesi URL'si panoya kopyalandı.",
-        "copy_url_toast_error": "İş öğesi URL'si panoya kopyalanırken bir hata oluştu."
+        "copy_url_toast_error": "İş öğesi URL'si panoya kopyalanırken bir hata oluştu.",
+        "copy_branch_name": "Dal adını kopyala"
       },
       "cycle": {
         "title": "Döngü eylemleri",

@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Đã xảy ra lỗi khi sao chép tiêu đề mục công việc vào bảng tạm.",
         "copy_url": "Sao chép URL",
         "copy_url_toast_success": "Đã sao chép URL mục công việc vào bảng tạm.",
-        "copy_url_toast_error": "Đã xảy ra lỗi khi sao chép URL mục công việc vào bảng tạm."
+        "copy_url_toast_error": "Đã xảy ra lỗi khi sao chép URL mục công việc vào bảng tạm.",
+        "copy_branch_name": "Sao chép tên nhánh"
       },
       "cycle": {
         "title": "Hành động chu kỳ",

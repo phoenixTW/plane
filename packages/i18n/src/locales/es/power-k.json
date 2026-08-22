@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Ocurrió un error al copiar el título del elemento de trabajo al portapapeles.",
         "copy_url": "Copiar URL",
         "copy_url_toast_success": "URL del elemento de trabajo copiada al portapapeles.",
-        "copy_url_toast_error": "Ocurrió un error al copiar la URL del elemento de trabajo al portapapeles."
+        "copy_url_toast_error": "Ocurrió un error al copiar la URL del elemento de trabajo al portapapeles.",
+        "copy_branch_name": "Copiar nombre de rama"
       },
       "cycle": {
         "title": "Acciones del ciclo",

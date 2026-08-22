@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Pri kopírovaní názvu pracovnej položky do schránky sa vyskytla chyba.",
         "copy_url": "Kopírovať URL",
         "copy_url_toast_success": "URL pracovnej položky bola skopírovaná do schránky.",
-        "copy_url_toast_error": "Pri kopírovaní URL pracovnej položky do schránky sa vyskytla chyba."
+        "copy_url_toast_error": "Pri kopírovaní URL pracovnej položky do schránky sa vyskytla chyba.",
+        "copy_branch_name": "Kopírovať názov vetvy"
       },
       "cycle": {
         "title": "Akcie pre cyklus",

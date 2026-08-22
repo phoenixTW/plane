@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Ocorreu um erro ao copiar o título do item de trabalho para a área de transferência.",
         "copy_url": "Copiar URL",
         "copy_url_toast_success": "URL do item de trabalho copiada para a área de transferência.",
-        "copy_url_toast_error": "Ocorreu um erro ao copiar a URL do item de trabalho para a área de transferência."
+        "copy_url_toast_error": "Ocorreu um erro ao copiar a URL do item de trabalho para a área de transferência.",
+        "copy_branch_name": "Copiar nome do branch"
       },
       "cycle": {
         "title": "Ações do ciclo",

@@ -27,7 +27,8 @@
         "copy_title_toast_error": "Při kopírování názvu pracovní položky do schránky došlo k chybě.",
         "copy_url": "Kopírovat URL",
         "copy_url_toast_success": "URL pracovní položky zkopírována do schránky.",
-        "copy_url_toast_error": "Při kopírování URL pracovní položky do schránky došlo k chybě."
+        "copy_url_toast_error": "Při kopírování URL pracovní položky do schránky došlo k chybě.",
+        "copy_branch_name": "Kopírovat název větve"
       },
       "cycle": {
         "title": "Akce cyklu",

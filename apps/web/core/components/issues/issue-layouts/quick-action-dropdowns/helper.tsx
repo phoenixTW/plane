@@ -332,6 +332,7 @@ export const useWorkItemDetailMenuItems = (props: MenuItemFactoryProps): TContex
     () => [
       factory.createCopyMenuItem(props.workspaceSlug),
       factory.createOpenInNewTabMenuItem(),
+      factory.createCopyLinkMenuItem(),
       factory.createCopyBranchNameMenuItem(),
       factory.createArchiveMenuItem(),
       factory.createRestoreMenuItem(),
