@@ -70,6 +70,7 @@ from plane.utils.grouper import (
 )
 from plane.utils.host import base_host
 from plane.utils.issue_filters import issue_filters
+from plane.utils.issue_relation_counts import blocked_by_count_subquery, blocking_count_subquery
 from plane.utils.order_queryset import order_issue_queryset
 from plane.utils.paginator import GroupedOffsetPaginator, SubGroupedOffsetPaginator
 from plane.utils.timezone_converter import user_timezone_converter
@@ -147,6 +148,10 @@ class IssueListEndpoint(BaseAPIView):
                 .annotate(count=Func(F("id"), function="Count"))
                 .values("count")
             )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
+            )
             .distinct()
         )
 
@@ -196,6 +201,8 @@ class IssueListEndpoint(BaseAPIView):
                 "updated_by",
                 "attachment_count",
                 "link_count",
+                "blocked_by_count",
+                "blocking_count",
                 "is_draft",
                 "archived_at",
                 "deleted_at",
@@ -256,6 +263,10 @@ class IssueViewSet(BaseViewSet):
                     .annotate(count=Count("id"))
                     .values("count")
                 )
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
         )
 
@@ -461,6 +472,8 @@ class IssueViewSet(BaseViewSet):
                     "updated_by",
                     "attachment_count",
                     "link_count",
+                    "blocked_by_count",
+                    "blocking_count",
                     "is_draft",
                     "archived_at",
                     "deleted_at",
@@ -527,6 +540,10 @@ class IssueViewSet(BaseViewSet):
                     .annotate(count=Count("id"))
                     .values("count")
                 )
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
             .annotate(
                 label_ids=Coalesce(
@@ -850,6 +867,10 @@ class IssuePaginatedViewSet(BaseViewSet):
                     .values("count")
                 )
             )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
+            )
         )
 
     def process_paginated_result(self, fields, results, timezone):
@@ -895,6 +916,8 @@ class IssuePaginatedViewSet(BaseViewSet):
             "link_count",
             "attachment_count",
             "sub_issues_count",
+            "blocked_by_count",
+            "blocking_count",
         ]
 
         if str(is_description_required).lower() == "true":
@@ -1003,6 +1026,10 @@ class IssueDetailEndpoint(BaseAPIView):
                 .order_by()
                 .annotate(count=Func(F("id"), function="Count"))
                 .values("count")
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
             .prefetch_related(
                 Prefetch(
@@ -1256,6 +1283,10 @@ class IssueDetailIdentifierEndpoint(BaseAPIView):
                 .order_by()
                 .annotate(count=Func(F("id"), function="Count"))
                 .values("count")
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
             .filter(sequence_id=issue_identifier)
             .annotate(

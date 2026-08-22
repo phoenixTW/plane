@@ -27,6 +27,7 @@ from plane.bgtasks.issue_activities_task import issue_activity
 from plane.utils.timezone_converter import user_timezone_converter
 from collections import defaultdict
 from plane.utils.host import base_host
+from plane.utils.issue_relation_counts import blocked_by_count_subquery, blocking_count_subquery
 from plane.utils.order_queryset import order_issue_queryset
 
 
@@ -83,6 +84,10 @@ class SubIssuesEndpoint(BaseAPIView):
                     ),
                     0,
                 )
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
             .annotate(
                 label_ids=Coalesce(
@@ -162,6 +167,8 @@ class SubIssuesEndpoint(BaseAPIView):
                 "updated_by",
                 "attachment_count",
                 "link_count",
+                "blocked_by_count",
+                "blocking_count",
                 "is_draft",
                 "archived_at",
                 "state_group",

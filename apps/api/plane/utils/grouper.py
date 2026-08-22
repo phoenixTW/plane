@@ -124,6 +124,8 @@ def issue_on_results(
         "updated_by",
         "attachment_count",
         "link_count",
+        "blocked_by_count",
+        "blocking_count",
         "is_draft",
         "archived_at",
         "state__group",

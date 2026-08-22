@@ -34,6 +34,7 @@ from plane.utils.grouper import (
     issue_queryset_grouper,
 )
 from plane.utils.issue_filters import issue_filters
+from plane.utils.issue_relation_counts import blocked_by_count_subquery, blocking_count_subquery
 from plane.utils.order_queryset import order_issue_queryset
 from plane.utils.paginator import GroupedOffsetPaginator, SubGroupedOffsetPaginator
 from plane.utils.filters import ComplexFilterBackend
@@ -77,6 +78,10 @@ class ModuleIssueViewSet(BaseViewSet):
                 .order_by()
                 .annotate(count=Func(F("id"), function="Count"))
                 .values("count")
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
             .prefetch_related("assignees", "labels", "issue_module__module")
         )
