@@ -6,6 +6,8 @@
 
 export * from "./assignee-column";
 export * from "./attachment-column";
+export * from "./blocked-by-column";
+export * from "./blocking-column";
 export * from "./created-on-column";
 export * from "./due-date-column";
 export * from "./estimate-column";

@@ -461,7 +461,6 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
           count={blockedByCount}
           icon={BlockedIcon}
           chipClassName={ISSUE_RELATION_OPTIONS.blocked_by.className}
-          isMobile={isMobile}
         />
       </WithDisplayPropertiesHOC>
 
@@ -477,7 +476,6 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
           count={blockingCount}
           icon={BlockerIcon}
           chipClassName={ISSUE_RELATION_OPTIONS.blocking.className}
-          isMobile={isMobile}
         />
       </WithDisplayPropertiesHOC>
 
