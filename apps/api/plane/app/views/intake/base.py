@@ -44,6 +44,7 @@ from plane.app.serializers import (
     IssueDescriptionVersionDetailSerializer,
 )
 from plane.utils.issue_filters import issue_filters
+from plane.utils.issue_relation_counts import blocked_by_count_subquery, blocking_count_subquery
 from plane.utils.order_queryset import INTAKE_ISSUE_ORDER_BY_ALLOWLIST, sanitize_order_by
 from plane.bgtasks.issue_activities_task import issue_activity
 from plane.bgtasks.issue_description_version_task import issue_description_version_task
@@ -137,6 +138,10 @@ class IntakeIssueViewSet(BaseViewSet):
                 .order_by()
                 .annotate(count=Func(F("id"), function="Count"))
                 .values("count")
+            )
+            .annotate(
+                blocked_by_count=blocked_by_count_subquery(),
+                blocking_count=blocking_count_subquery(),
             )
             .annotate(
                 label_ids=Coalesce(
