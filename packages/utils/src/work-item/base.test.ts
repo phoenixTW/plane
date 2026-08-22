@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { generateWorkItemBranchName } from "./base";
+import { createIssuePayload, generateWorkItemBranchName } from "./base";
 
 describe("generateWorkItemBranchName", () => {
   it("builds username prefix, identifier, sequence id and title slug", () => {
@@ -155,5 +155,17 @@ describe("generateWorkItemBranchName", () => {
     });
 
     expect(branchName).toEqual("kaustav/PROJ-123-fix-login-redirect");
+  });
+});
+
+describe("createIssuePayload", () => {
+  it("defaults all count fields to zero", () => {
+    const payload = createIssuePayload("proj-1", { name: "x" });
+
+    expect(payload.sub_issues_count).toBe(0);
+    expect(payload.attachment_count).toBe(0);
+    expect(payload.link_count).toBe(0);
+    expect(payload.blocked_by_count).toBe(0);
+    expect(payload.blocking_count).toBe(0);
   });
 });

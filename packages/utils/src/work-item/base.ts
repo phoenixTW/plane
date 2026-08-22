@@ -154,6 +154,8 @@ export const createIssuePayload: (projectId: string, formData: Partial<TIssue>) 
     sub_issues_count: 0,
     attachment_count: 0,
     link_count: 0,
+    blocked_by_count: 0,
+    blocking_count: 0,
     // tempId is used for optimistic updates. It is not a part of the API response.
     tempId: uuidv4(),
     // to be overridden by the form data

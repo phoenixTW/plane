@@ -29,6 +29,8 @@ import {
   LabelPropertyIcon,
   PriorityPropertyIcon,
   StartDatePropertyIcon,
+  BlockedIcon,
+  BlockerIcon,
 } from "@plane/propel/icons";
 import type {
   GroupByColumnTypes,
@@ -844,6 +846,8 @@ export const SpreadSheetPropertyIconMap: Record<string, FC<ISvgIcons>> = {
   Link2: LinkIcon,
   Paperclip: Paperclip,
   LayersIcon: LayersIcon,
+  BlockedIcon: BlockedIcon,
+  BlockerIcon: BlockerIcon,
 };
 
 export const SPREADSHEET_COLUMNS: { [key in keyof IIssueDisplayProperties]: TSpreadsheetColumn } = {

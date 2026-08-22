@@ -148,6 +148,8 @@ export const ISSUE_DISPLAY_PROPERTIES_KEYS: (keyof IIssueDisplayProperties)[] = 
   "priority",
   "state",
   "sub_issue_count",
+  "blocked_by_count",
+  "blocking_count",
   "link",
   "attachment_count",
   "estimate",
@@ -198,6 +200,14 @@ export const ISSUE_DISPLAY_PROPERTIES: {
     titleTranslationKey: "issue.display.properties.sub_issue_count",
   },
   {
+    key: "blocked_by_count",
+    titleTranslationKey: "issue.display.properties.blocked_by_count",
+  },
+  {
+    key: "blocking_count",
+    titleTranslationKey: "issue.display.properties.blocking_count",
+  },
+  {
     key: "attachment_count",
     titleTranslationKey: "issue.display.properties.attachment_count",
   },
@@ -225,15 +235,17 @@ export const SPREADSHEET_PROPERTY_LIST: (keyof IIssueDisplayProperties)[] = [
   "link",
   "attachment_count",
   "sub_issue_count",
+  "blocked_by_count",
+  "blocking_count",
 ];
 
 export const SPREADSHEET_PROPERTY_DETAILS: {
   [key in keyof IIssueDisplayProperties]: {
     i18n_title: string;
-    ascendingOrderKey: TIssueOrderByOptions;
-    ascendingOrderTitle: string;
-    descendingOrderKey: TIssueOrderByOptions;
-    descendingOrderTitle: string;
+    ascendingOrderKey?: TIssueOrderByOptions;
+    ascendingOrderTitle?: string;
+    descendingOrderKey?: TIssueOrderByOptions;
+    descendingOrderTitle?: string;
     icon: string;
   };
 } = {
@@ -348,6 +360,14 @@ export const SPREADSHEET_PROPERTY_DETAILS: {
     descendingOrderKey: "sub_issues_count",
     descendingOrderTitle: "Least",
     icon: "LayersIcon",
+  },
+  blocked_by_count: {
+    i18n_title: "issue.display.properties.blocked_by_count",
+    icon: "BlockedIcon",
+  },
+  blocking_count: {
+    i18n_title: "issue.display.properties.blocking_count",
+    icon: "BlockerIcon",
   },
 };
 
