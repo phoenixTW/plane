@@ -41,6 +41,8 @@ def get_default_display_properties():
     return {
         "assignee": True,
         "attachment_count": True,
+        "blocked_by_count": True,
+        "blocking_count": True,
         "created_on": True,
         "due_date": True,
         "estimate": True,
