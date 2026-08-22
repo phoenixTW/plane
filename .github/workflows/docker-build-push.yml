@@ -19,9 +19,41 @@ permissions:
   packages: write
 
 jobs:
+  compute-version:
+    name: Compute Release Version
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push'
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Compute next version
+        id: version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LATEST_TAG=$(gh release list --repo "${{ github.repository }}" --limit 1 --json tagName --jq '.[0].tagName' 2>/dev/null || true)
+          if [ -z "$LATEST_TAG" ] || [ "$LATEST_TAG" == "null" ]; then
+            BASE_VERSION=$(jq -r .version package.json)
+            NEW_VERSION="v${BASE_VERSION}"
+          else
+            VER=${LATEST_TAG#v}
+            MAJOR=$(echo "$VER" | cut -d. -f1)
+            MINOR=$(echo "$VER" | cut -d. -f2)
+            PATCH=$(echo "$VER" | cut -d. -f3)
+            PATCH=$((PATCH + 1))
+            NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          fi
+          echo "Computed version: $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
   build-and-push:
     name: Build-Push ${{ matrix.image.name }}
     runs-on: ubuntu-22.04
+    needs: [compute-version]
+    if: always()
     strategy:
       fail-fast: false
       matrix:
@@ -67,6 +99,7 @@ jobs:
             type=raw,value=main,enable={{is_default_branch}}
             type=sha,prefix=sha-,format=short
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ needs.compute-version.outputs.version }},enable=${{ needs.compute-version.result == 'success' }}
 
       - name: Build and push
         uses: docker/build-push-action@v7.0.0
@@ -79,3 +112,43 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.image.name }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.image.name }}:buildcache,mode=max
+
+  publish-release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-22.04
+    needs: [compute-version, build-and-push]
+    if: github.event_name == 'push' && needs.compute-version.result == 'success' && needs.build-and-push.result == 'success'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Prepare release assets
+        env:
+          VERSION: ${{ needs.compute-version.outputs.version }}
+        run: |
+          mkdir -p release-assets
+          cp deployments/cli/community/install.sh release-assets/setup.sh
+          cp deployments/cli/community/restore.sh release-assets/restore.sh
+          cp deployments/cli/community/restore-airgapped.sh release-assets/restore-airgapped.sh
+          cp deployments/cli/community/variables.env release-assets/variables.env
+          cp deployments/cli/community/docker-compose.yml release-assets/docker-compose.yml
+          cp deployments/swarm/community/swarm.sh release-assets/swarm.sh
+          sed -i "s|\${APP_RELEASE:-main}|\${APP_RELEASE:-${VERSION}}|g" release-assets/docker-compose.yml
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.compute-version.outputs.version }}
+        run: |
+          gh release create "$VERSION" \
+            --repo "${{ github.repository }}" \
+            --title "$VERSION" \
+            --generate-release-notes \
+            release-assets/setup.sh \
+            release-assets/restore.sh \
+            release-assets/restore-airgapped.sh \
+            release-assets/variables.env \
+            release-assets/docker-compose.yml \
+            release-assets/swarm.sh
