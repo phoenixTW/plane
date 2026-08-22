@@ -6,4 +6,5 @@
 
 export * from "./labels";
 export * from "./all-properties";
+export * from "./relation-count-chip";
 export * from "./label-dropdown";

@@ -24,6 +24,7 @@ import type { TIssue, TIssueRelationTypes } from "@plane/types";
 import { cn } from "@plane/utils";
 // hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
+import { usePlatformOS } from "@/hooks/use-platform-os";
 import { useProject } from "@/hooks/store/use-project";
 import { useProjectState } from "@/hooks/store/use-project-state";
 
@@ -92,11 +93,10 @@ export interface IRelationCountChipProps {
   count: number;
   icon: FC<ISvgIcons>;
   chipClassName: string;
-  isMobile: boolean;
 }
 
 export const RelationCountChip = observer(function RelationCountChip(props: IRelationCountChipProps) {
-  const { issue, relationType, count, icon: Icon, chipClassName, isMobile } = props;
+  const { issue, relationType, count, icon: Icon, chipClassName } = props;
   // i18n
   const { t } = useTranslation();
   // router
@@ -106,6 +106,7 @@ export const RelationCountChip = observer(function RelationCountChip(props: IRel
     relation: { fetchRelations, getRelationByIssueIdRelationType },
     issue: { getIssueById },
   } = useIssueDetail();
+  const { isMobile } = usePlatformOS();
   // state
   const [isFetching, setIsFetching] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);

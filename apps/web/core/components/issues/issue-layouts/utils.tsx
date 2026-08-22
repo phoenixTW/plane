@@ -61,6 +61,8 @@ import { ISSUE_GROUP_BY_OPTIONS } from "@plane/constants";
 import {
   SpreadsheetAssigneeColumn,
   SpreadsheetAttachmentColumn,
+  SpreadsheetBlockedByColumn,
+  SpreadsheetBlockingColumn,
   SpreadsheetCreatedOnColumn,
   SpreadsheetDueDateColumn,
   SpreadsheetEstimateColumn,
@@ -852,6 +854,8 @@ export const SpreadSheetPropertyIconMap: Record<string, FC<ISvgIcons>> = {
 
 export const SPREADSHEET_COLUMNS: { [key in keyof IIssueDisplayProperties]: TSpreadsheetColumn } = {
   assignee: SpreadsheetAssigneeColumn,
+  blocked_by_count: SpreadsheetBlockedByColumn,
+  blocking_count: SpreadsheetBlockingColumn,
   created_on: SpreadsheetCreatedOnColumn,
   due_date: SpreadsheetDueDateColumn,
   estimate: SpreadsheetEstimateColumn,
