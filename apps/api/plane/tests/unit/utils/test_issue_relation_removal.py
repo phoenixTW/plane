@@ -196,7 +196,7 @@ class TestRemoveIssueRelation:
         assert IssueRelation.objects.count() == 0
 
     @pytest.mark.parametrize("relation_type", ["blocked_by", "blocking", "duplicate", "start_before", "implements"])
-    def test_mismatched_type_falls_back_to_orientation_match(self, workspace, create_user, relation_type):
+    def test_mismatched_type_does_not_delete_different_relation(self, workspace, create_user, relation_type):
         user = create_user
         project = _project(workspace, user)
         state = _state(project, workspace)
@@ -215,8 +215,8 @@ class TestRemoveIssueRelation:
             origin="https://testserver",
         )
 
-        assert result is True
-        assert IssueRelation.objects.count() == 0
+        assert result is False
+        assert IssueRelation.objects.count() == 1
 
     @patch("plane.utils.issue_relation_removal.issue_activity")
     def test_missing_relation_returns_false_without_activity(self, mock_activity, workspace, create_user):

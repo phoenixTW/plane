@@ -44,6 +44,7 @@ def remove_issue_relation(
     if relation is None:
         relation = IssueRelation.objects.filter(
             workspace__slug=workspace_slug,
+            relation_type=actual_relation,
         ).filter(
             Q(issue_id=related_issue_id, related_issue_id=issue_id)
             | Q(issue_id=issue_id, related_issue_id=related_issue_id)

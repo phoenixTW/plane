@@ -143,6 +143,45 @@ class TestDeleteRelationErrors:
 
         assert response.status_code == 404
 
+    def test_fallback_does_not_delete_different_relation_type(self, api_key_client, workspace, create_user):
+        project = _make_project(workspace, create_user)
+        state = _make_state(project, workspace)
+        issue_a = _make_issue(project, workspace, create_user, state, "A")
+        issue_b = _make_issue(project, workspace, create_user, state, "B")
+        IssueRelation.objects.create(
+            issue=issue_a, related_issue=issue_b, relation_type="relates_to",
+            project=project, workspace=workspace, created_by=create_user,
+        )
+
+        url = _delete_url(workspace.slug, project.id, issue_a.id, issue_b.id, "blocked_by")
+        response = api_key_client.delete(url)
+
+        assert response.status_code == 404
+        assert IssueRelation.objects.filter(relation_type="relates_to").exists()
+
+    def test_cross_project_related_issue_returns_404(self, api_key_client, workspace, create_user):
+        project_a = _make_project(workspace, create_user)
+        project_b = Project.objects.create(
+            name="P2", identifier="P2", workspace=workspace, created_by=create_user,
+        )
+        ProjectMember.objects.create(
+            project=project_b, workspace=workspace, member=create_user, role=20, is_active=True,
+        )
+        state_a = _make_state(project_a, workspace)
+        state_b = _make_state(project_b, workspace)
+        issue_a = _make_issue(project_a, workspace, create_user, state_a, "A")
+        issue_b = _make_issue(project_b, workspace, create_user, state_b, "B")
+        IssueRelation.objects.create(
+            issue=issue_a, related_issue=issue_b, relation_type="blocked_by",
+            project=project_a, workspace=workspace, created_by=create_user,
+        )
+
+        url = _delete_url(workspace.slug, project_a.id, issue_a.id, issue_b.id, "blocked_by")
+        response = api_key_client.delete(url)
+
+        assert response.status_code == 404
+        assert IssueRelation.objects.exists()
+
     def test_cross_tenant_api_key_returns_403(self, api_key_client, workspace, create_user):
         project = _make_project(workspace, create_user)
         state = _make_state(project, workspace)
