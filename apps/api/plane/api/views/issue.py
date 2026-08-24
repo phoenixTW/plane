@@ -2587,3 +2587,56 @@ class IssueRelationListCreateAPIEndpoint(BaseAPIView):
             serializer_class(refetched_relations, many=True).data,
             status=status.HTTP_201_CREATED,
         )
+
+    @work_item_relation_docs(
+        operation_id="delete_work_item_relation",
+        summary="Delete work item relation",
+        description="Remove a relationship between two work items. The relation_type query parameter specifies which relationship type to remove.",
+        parameters=[
+            ISSUE_ID_PARAMETER,
+        ],
+        responses={
+            204: DELETED_RESPONSE,
+            400: INVALID_REQUEST_RESPONSE,
+            404: ISSUE_NOT_FOUND_RESPONSE,
+        },
+    )
+    def delete(self, request, slug, project_id, issue_id, related_id):
+        """Delete work item relation
+
+        Remove a relationship between the current work item and
+        the specified related work item. The relation_type query
+        parameter is required and must be one of the eight built-in types.
+        """
+        from plane.api.serializers.issue import IssueRelationRemoveSerializer
+        from plane.utils.issue_relation_removal import remove_issue_relation
+
+        query_data = {"relation_type": request.query_params.get("relation_type", "")}
+        serializer = IssueRelationRemoveSerializer(data=query_data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        relation_type = serializer.validated_data["relation_type"]
+
+        related_issue = Issue.issue_objects.filter(
+            workspace__slug=slug,
+            pk=related_id,
+        ).first()
+        if related_issue is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        deleted = remove_issue_relation(
+            workspace_slug=slug,
+            issue_id=issue_id,
+            related_issue_id=related_id,
+            relation_type=relation_type,
+            actor_id=request.user.id,
+            project_id=project_id,
+            requested_data=json.dumps({"relation_type": relation_type}),
+            origin=base_host(request=request, is_app=True),
+        )
+
+        if not deleted:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
