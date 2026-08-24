@@ -32,6 +32,7 @@ from plane.db.models import (
 from plane.bgtasks.issue_activities_task import issue_activity
 from plane.utils.issue_relation_mapper import get_actual_relation
 from plane.utils.issue_relation_counts import blocked_by_count_subquery, blocking_count_subquery
+from plane.utils.issue_relation_removal import remove_issue_relation
 from plane.utils.host import base_host
 
 
@@ -275,24 +276,18 @@ class IssueRelationViewSet(BaseViewSet):
 
     def remove_relation(self, request, slug, project_id, issue_id):
         related_issue = request.data.get("related_issue", None)
+        relation_type = request.data.get("relation_type", "blocked_by")
 
-        issue_relations = IssueRelation.objects.filter(
-            workspace__slug=slug,
-        ).filter(
-            Q(issue_id=related_issue, related_issue_id=issue_id) | Q(issue_id=issue_id, related_issue_id=related_issue)
-        )
-        issue_relations = issue_relations.first()
-        current_instance = json.dumps(IssueRelationSerializer(issue_relations).data, cls=DjangoJSONEncoder)
-        issue_relations.delete()
-        issue_activity.delay(
-            type="issue_relation.activity.deleted",
+        deleted = remove_issue_relation(
+            workspace_slug=slug,
+            issue_id=issue_id,
+            related_issue_id=related_issue,
+            relation_type=relation_type,
+            actor_id=request.user.id,
+            project_id=project_id,
             requested_data=json.dumps(request.data, cls=DjangoJSONEncoder),
-            actor_id=str(request.user.id),
-            issue_id=str(issue_id),
-            project_id=str(project_id),
-            current_instance=current_instance,
-            epoch=int(timezone.now().timestamp()),
-            notification=True,
             origin=base_host(request=request, is_app=True),
         )
+        if not deleted:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_204_NO_CONTENT)
