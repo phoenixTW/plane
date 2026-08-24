@@ -73,7 +73,9 @@ class TestDeleteRelationSuccess:
             ("finish_after", "finish_before", True),
         ],
     )
-    def test_delete_each_built_in_type(self, api_key_client, workspace, create_user, relation_type, stored_type, is_reverse):
+    def test_delete_each_built_in_type(
+        self, api_key_client, workspace, create_user, relation_type, stored_type, is_reverse
+    ):
         project = _make_project(workspace, create_user)
         state = _make_state(project, workspace)
         issue_a = _make_issue(project, workspace, create_user, state, "A")

@@ -2591,7 +2591,10 @@ class IssueRelationListCreateAPIEndpoint(BaseAPIView):
     @work_item_relation_docs(
         operation_id="delete_work_item_relation",
         summary="Delete work item relation",
-        description="Remove a relationship between two work items. The relation_type query parameter specifies which relationship type to remove.",
+        description=(
+            "Remove a relationship between two work items. "
+            "The relation_type query parameter specifies which relationship type to remove."
+        ),
         parameters=[
             ISSUE_ID_PARAMETER,
         ],
