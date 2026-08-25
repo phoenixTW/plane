@@ -159,7 +159,7 @@ class TestDeleteRelationErrors:
         assert response.status_code == 404
         assert IssueRelation.objects.filter(relation_type="relates_to").exists()
 
-    def test_cross_project_related_issue_returns_404(self, api_key_client, workspace, create_user):
+    def test_cross_project_relation_deletes_successfully(self, api_key_client, workspace, create_user):
         project_a = _make_project(workspace, create_user)
         project_b = Project.objects.create(
             name="P2", identifier="P2", workspace=workspace, created_by=create_user,
@@ -179,8 +179,8 @@ class TestDeleteRelationErrors:
         url = _delete_url(workspace.slug, project_a.id, issue_a.id, issue_b.id, "blocked_by")
         response = api_key_client.delete(url)
 
-        assert response.status_code == 404
-        assert IssueRelation.objects.exists()
+        assert response.status_code == 204
+        assert not IssueRelation.objects.exists()
 
     def test_cross_tenant_api_key_returns_403(self, api_key_client, workspace, create_user):
         project = _make_project(workspace, create_user)

@@ -2623,7 +2623,6 @@ class IssueRelationListCreateAPIEndpoint(BaseAPIView):
 
         related_issue = Issue.issue_objects.filter(
             workspace__slug=slug,
-            project_id=project_id,
             pk=related_id,
         ).first()
         if related_issue is None:
