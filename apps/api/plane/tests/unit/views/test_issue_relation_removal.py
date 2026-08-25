@@ -48,10 +48,8 @@ class TestRemoveRelationEndpoint:
             project=project, workspace=workspace, created_by=create_user,
         )
 
-        response = session_client.post(
-            f"/api/workspaces/{workspace.slug}/projects/{project.id}/issues/{issue_a.id}/remove-relation/",
-            data={"related_issue": str(issue_b.id), "relation_type": "blocked_by"},
-            format="json",
+        response = session_client.delete(
+            f"/api/v1/workspaces/{workspace.slug}/projects/{project.id}/work-items/{issue_a.id}/relations/{issue_b.id}/?relation_type=blocked_by",
         )
 
         assert response.status_code == 204
@@ -64,10 +62,8 @@ class TestRemoveRelationEndpoint:
         issue_a = _issue(project, workspace, create_user, state, "A")
         issue_b = _issue(project, workspace, create_user, state, "B")
 
-        response = session_client.post(
-            f"/api/workspaces/{workspace.slug}/projects/{project.id}/issues/{issue_a.id}/remove-relation/",
-            data={"related_issue": str(issue_b.id), "relation_type": "blocked_by"},
-            format="json",
+        response = session_client.delete(
+            f"/api/v1/workspaces/{workspace.slug}/projects/{project.id}/work-items/{issue_a.id}/relations/{issue_b.id}/?relation_type=blocked_by",
         )
 
         assert response.status_code == 404

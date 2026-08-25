@@ -151,6 +151,11 @@ new_url_patterns = [
         IssueRelationListCreateAPIEndpoint.as_view(http_method_names=["get", "post"]),
         name="work-item-relation-list",
     ),
+    path(
+        "workspaces/<str:slug>/projects/<uuid:project_id>/work-items/<uuid:issue_id>/relations/<uuid:related_id>/",
+        IssueRelationListCreateAPIEndpoint.as_view(http_method_names=["delete", "options"]),
+        name="work-item-relation-detail",
+    ),
 ]
 
 urlpatterns = old_url_patterns + new_url_patterns

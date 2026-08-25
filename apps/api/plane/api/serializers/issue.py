@@ -571,12 +571,25 @@ class IssueRelationRemoveSerializer(serializers.Serializer):
     """
     Serializer for removing issue relations.
 
-    Removes existing relationships between work items by specifying
-    the related issue ID.
+    Validates the relation_type query parameter against
+    the eight built-in dependency and relationship types.
     """
 
-    related_issue = serializers.UUIDField(
-        required=True, help_text="ID of the related work item to remove relation with"
+    RELATION_TYPE_CHOICES = [
+        ("blocking", "Blocking"),
+        ("blocked_by", "Blocked By"),
+        ("duplicate", "Duplicate"),
+        ("relates_to", "Relates To"),
+        ("start_before", "Start Before"),
+        ("start_after", "Start After"),
+        ("finish_before", "Finish Before"),
+        ("finish_after", "Finish After"),
+    ]
+
+    relation_type = serializers.ChoiceField(
+        choices=RELATION_TYPE_CHOICES,
+        required=True,
+        help_text="Type of relationship to remove",
     )
 
 
